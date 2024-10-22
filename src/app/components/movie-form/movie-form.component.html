@@ -1,0 +1,64 @@
+<button class="btn btn-outline-light me-2" type="button" (click)="openModal(addModal)">Add movie</button>
+
+<ng-template #addModal>
+    <div>
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addModal">Add Movie</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modalRef?.hide()"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" formControlName="title" [class.is-invalid]="addForm.get('title')?.invalid && addForm.get('title')?.touched">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="genre" class="form-label">Genre</label>
+                        <select class="form-control" id="genre" formControlName="genre" [class.is-invalid]="addForm.get('genre')?.invalid && addForm.get('genre')?.touched">
+                            <option value="">Select Genre</option>
+                            <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="production_year" class="form-label">Year</label>
+                        <input type="number" class="form-control" id="production_year" formControlName="production_year" [class.is-invalid]="addForm.get('production_year')?.invalid && addForm.get('production_year')?.touched">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="production_country" class="form-label">Production Country</label>
+                        <select class="form-control" id="production_country" formControlName="production_country" [class.is-invalid]="addForm.get('production_country')?.invalid && addForm.get('production_country')?.touched">
+                            <option value="">Select Country</option>
+                            <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="producer" class="form-label">Producer</label>
+                        <select class="form-control" id="producer" formControlName="producer" [class.is-invalid]="addForm.get('producer')?.invalid && addForm.get('producer')?.touched">
+                            <option value="">Select Producer</option>
+                            <option *ngFor="let producer of producers" [value]="producer">{{ producer }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="duration_minutes" formControlName="duration_minutes" [class.is-invalid]="addForm.get('duration_minutes')?.invalid && addForm.get('duration_minutes')?.touched">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="revenue" class="form-label">Revenue</label>
+                        <input type="number" class="form-control" id="revenue" formControlName="revenue" [class.is-invalid]="addForm.get('revenue')?.invalid && addForm.get('revenue')?.touched">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" formControlName="description" [class.is-invalid]="addForm.get('description')?.invalid && addForm.get('description')?.touched" [ngStyle]="{'height': '150px'}"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</ng-template>

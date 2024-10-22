@@ -1,0 +1,58 @@
+<button class="btn btn-outline-light me-2" type="button" (click)="openModal(modalSignIn)" *ngIf="!isLoggedIn">Sign In</button>
+<button class="btn btn-outline-light me-2" type="button" (click)="openModal(modalSignUp)" *ngIf="!isLoggedIn">Sign Up</button>
+<button class="btn btn-outline-light me-2" type="button" (click)="logout()" *ngIf="isLoggedIn">Log out</button>
+
+
+<ng-template #modalSignIn>
+    <div>
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="signInModal">Sign In</h1>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+        </div>
+        <div class="modal-body">
+            <!-- Додаємо форму -->
+            <form [formGroup]="authForm" (ngSubmit)="onSignInSubmit()">
+                <div class="mb-3">
+                    <label for="username" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="username" aria-describedby="name" placeholder="Enter username" formControlName="username">
+                </div>
+                <div class="mb-3">
+                    <label for="pass" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="pass" placeholder="Enter password" formControlName="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #modalSignUp>
+    <div>
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="signInModal">Sign Up</h1>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="authForm" (ngSubmit)="onSignUpSubmit()">
+                <div class="mb-3">
+                    <label for="username" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="username" aria-describedby="name" placeholder="Enter username" formControlName="username"
+                        [ngClass]="{'is-invalid': authForm.get('username')?.invalid && authForm.get('username')?.touched}">
+                </div>
+                <div class="mb-3">
+                    <label for="pass" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="pass" placeholder="Enter password" formControlName="password"
+                        [ngClass]="{'is-invalid': authForm.get('password')?.invalid && authForm.get('password')?.touched}">
+                </div>
+                <div class="mb-3">
+                    <label for="passconf" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="passconf" placeholder="Confirm password" formControlName="confirmPassword"
+                        [ngClass]="{'is-invalid': authForm.get('confirmPassword')?.invalid && authForm.get('confirmPassword')?.touched}">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</ng-template>
+

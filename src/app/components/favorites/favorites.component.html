@@ -1,0 +1,70 @@
+<!-- <div class="container text-center py-5" id="top">
+    <div class="d-flex mb-4">
+        <h2 id="icons" class="mb-0">Favorites</h2>
+        <div class="dropdown ms-auto">
+            <svg (click)="showCards()" class="view-option-selector-button__icon" width="24" height="24" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg" role="button" tabindex="0" fill="rgb(13, 110, 253)" stroke="inherit">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M4.6 4.6H10V10H4.6V4.6zm-1-1H11V11H3.6V3.6zm1 10.4H10v5.4H4.6V14zm-1-1H11v7.4H3.6V13zm15.8-8.4H14V10h5.4V4.6zm-5.4-1h-1V11h7.4V3.6H14zM14 14h5.4v5.4H14V14zm-1-1h7.4v7.4H13V13z">
+                </path>
+            </svg>
+
+            <svg (click)="showList()" class="view-option-selector-button__icon" width="24" height="24" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg" role="button" tabindex="0" fill="rgb(13, 110, 253)" stroke="inherit">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M19.4 4.6H4.6v14.8h14.8V4.6zm-15.8-1v16.8h16.8V3.6H3.6z"></path>
+            </svg>
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Sort Movies
+            </button>
+            <ul class="dropdown-menu ">
+                <li class="dropdown-item" (click)="sortByYear()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by year</li>
+                <li class="dropdown-item" (click)="sortByYearDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by year (desc)</li>
+                <li class="dropdown-item" (click)="sortByTitle()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by title</li>
+                <li class="dropdown-item" (click)="sortByTitleDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by title (desc)</li>
+                <li class="dropdown-item" (click)="sortByDBAdding()" [ngStyle]="{ 'cursor': 'pointer' }">Least Recently Added</li>
+                <li class="dropdown-item" (click)="sortByDBAddingDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Most Recently Added</li>
+            </ul>
+        </div>
+    </div>
+    <div *ngIf="cardView; else listView">
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4  row-cols-lg-5 g-2 g-lg-3" >
+                <ng-container class="col" *ngFor="let movie of movies">
+                    <ng-container *ngIf="movie.isAddedToFavorites">
+                        <app-card 
+                    [cardId]="movie.id"
+                    [cardTitle]="movie.title" 
+                    [cardYear]="movie.year"
+                    [cardImage]="movie.posterPath"
+                    [cardRevenue]="movie.revenue"
+                    [cardDb]="movie.dateOfAdding"
+                    [isAddedToFavorites]="movie.isAddedToFavorites"
+                    [isAdded]="movie.isAdded"></app-card>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+
+
+    <ng-template #listView>
+        <div class="container">
+            <div class="row row-cols-1 row-cols-lg-2">
+                <ng-container class="col" *ngFor="let movie of movies">
+                    <ng-container *ngIf="movie.isAddedToFavorites">
+                        <app-list-item 
+                        [cardId]="movie.id"
+                        [cardTitle]="movie.title" 
+                        [cardYear]="movie.year"
+                        [cardImage]="movie.posterPath"
+                        [cardRevenue]="movie.revenue"
+                        [cardDb]="movie.dateOfAdding"
+                        [isAddedToFavorites]="movie.isAddedToFavorites"
+                        [isAdded]="movie.isAdded"></app-list-item>
+                    </ng-container>
+                   
+                </ng-container>
+            </div>
+        </div>
+    </ng-template>
+</div> -->
