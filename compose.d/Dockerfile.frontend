@@ -1,0 +1,35 @@
+FROM node:lts-alpine AS builder
+
+WORKDIR /frontend
+
+RUN npm install -g @angular/cli
+
+COPY package*.json .
+
+RUN npm install
+
+COPY . .
+
+RUN ng build -c production
+
+# Final image to build
+FROM alpine:3.20
+
+RUN \
+  apk --no-cache update && \
+  apk --no-cache upgrade && \
+  apk --no-cache add nginx
+
+RUN \
+  adduser -D -g 'www' www && \
+  mkdir /www && \
+  chown -R www: /var/lib/nginx && \
+  chown -R www: /www
+
+COPY nginx.d/nginx.conf /etc/nginx/nginx.conf
+
+WORKDIR /www
+
+COPY --from=builder /frontend/dist/film-catalog /www
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
