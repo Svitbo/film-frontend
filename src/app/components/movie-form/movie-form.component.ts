@@ -62,7 +62,6 @@ export class MovieFormComponent {
       this.modalRef?.hide();
 
     } else {
-      // Optionally mark all fields as touched to show validation errors
       this.addForm.markAllAsTouched();
     }
     

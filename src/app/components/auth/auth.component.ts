@@ -13,90 +13,91 @@ import { passwordChecking } from 'src/app/validators/PasswordsChecking';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent {
-  authForm : FormGroup;
+  signInForm: FormGroup;
+  signUpForm: FormGroup;
   modalRef? : BsModalRef;
 
-  isLoggedIn = false;
 
   user! : User;
 
   passwordPattern : any = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@*_.])[A-Za-z\d@*_.!$;:%^]{6,}$/;
 
   constructor(private formBuilder : FormBuilder, private modalService : BsModalService, private userService : UserService, private router : Router) {
-    this.authForm = formBuilder.group({
+    this.signUpForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
       confirmPassword: ['']
-    },
-    {
-      validator: [passwordChecking]
+    }, {
+      validator: passwordChecking
+    });
+
+    this.signInForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    //const role = localStorage.getItem('role');
-
-    // if(role != null && role != 'Guest') {
-    //   this.isLoggedIn = true;
-    // } else this.isLoggedIn = false;
-  }
 
   onSignUpSubmit() {
-    if(this.authForm.valid) {
+    if(this.signUpForm.valid) {
       const newUser : UserCreate = {
-        username: this.authForm.get('username')!.value,
-        password: this.authForm.get('password')!.value
+        username: this.signUpForm.get('username')!.value,
+        password: this.signUpForm.get('password')!.value
       };
 
       this.userService.register(newUser).subscribe({
         next: (response: any) => {
           console.log('User registered successfully:', response);
-          // Тут можете виконати дії після успішної реєстрації
         },
         error: (err: any) => {
           console.error('Registration failed:', err);
         }
       });
 
-      this.authForm.reset();
-      this.isLoggedIn = true;
-      this.modalRef!.hide();
+      this.signUpForm.reset();
 
-      this.router.navigate(['catalog']);
-      console.log(newUser);
+      this.userService.getToken(newUser.username, newUser.password).subscribe(
+        (response) => {
+          console.log('Success:', response);
+          
+          this.userService.saveToken(response.access_token);
+  
+          this.modalRef?.hide();
+  
+          this.router.navigate(['catalog']);
+        },
+        (error) => {
+          console.error('Error:', error);
+          alert('Invalid credentials');
+        }
+      );
     }
     
-
   }
 
   onSignInSubmit() {
-    // const newUser : User = this.createUser(this.authForm.get('username')!.value, this.authForm.get('password')!.value);
+    if (this.signInForm.valid) {
+      const username = this.signInForm.get('username')?.value;
+      const password = this.signInForm.get('password')?.value;
   
-    // this.userService.checkUser(newUser.username, newUser.password);
+      this.userService.getToken(username, password).subscribe(
+        (response) => {
+          console.log('Success:', response);
+          
+          this.userService.saveToken(response.access_token);
+          this.signInForm.reset();
+          this.modalRef?.hide();
   
-    
-    // if(localStorage.getItem('role') != 'Guest' && localStorage.getItem('role') != null) {
-    //   this.isLoggedIn = true;
-    //   this.authForm.reset();
-    //   this.modalRef!.hide();
-    // }
-    
-    // this.router.navigate(['catalog']);
-  }
-
-  createUser(username : string, password : string) {
-    // let user = {
-    //   id: this.generateId(),
-    //   username: username,
-    //   password: password,
-    //   role: 'User'
-    // }
-
-    // return user;
-  }
-
-  generateId() {
-    // return Math.floor(Math.random() * 100) + 1;
+          this.router.navigate(['catalog']);
+        },
+        (error) => {
+          console.error('Error:', error);
+          alert('Invalid credentials');
+        }
+      );
+    } else {
+      console.log('Form is invalid');
+    }
   }
 
   openModal(template : TemplateRef<any>) {
@@ -104,8 +105,10 @@ export class AuthComponent {
   }
 
   logout() {
-    // this.isLoggedIn = false;
-    // localStorage.setItem('role', 'Guest');
-    // this.router.navigate(['catalog']);
+    this.userService.logout()
+  }
+
+  isLoggedIn(): boolean {
+    return this.userService.isLoggedIn();
   }
 }

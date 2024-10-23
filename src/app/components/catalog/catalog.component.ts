@@ -12,7 +12,7 @@ import { ViewChild, ElementRef } from '@angular/core';
   styleUrls: ['./catalog.component.scss']
 })
 export class CatalogComponent {
-  cardView! : boolean;
+  cardView : boolean = true;
 
   genres = ['Action', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Romance'];
   selectedGenre: string = 'all';
@@ -21,35 +21,35 @@ export class CatalogComponent {
   yearError: string | null = null; 
   currentYear = new Date().getFullYear();
 
-  // private subscription! : Subscription;
-  // private subscriptionOnReset! : Subscription;
-
-  constructor(private dataService : DataService, private resetSortingService : ResetSortingService) { }
-
   titleToSearchBy: string = '';
-
 
   movies : Movie[] = [];
   filteredMovies : Movie[] = [];
 
-  ngOnInit(): void {
-    this.dataService.getMovies().subscribe(
-      (data) => {
-          this.movies = data;
-          this.filteredMovies = this.movies; // Ініціалізуємо filteredMovies
-          console.log(this.movies);
-      },
-      (error) => {
-          console.error('Error fetching items', error);
-      }
-  );
+  constructor(private dataService : DataService, private resetSortingService : ResetSortingService) { }
 
+  ngOnInit(): void {
+    this.dataService.movies$.subscribe(movies => {
+      this.movies = movies;
+      this.filteredMovies = this.movies;
+    });
+  
     this.dataService.titleToSearchBy$.subscribe(title => {
       this.titleToSearchBy = title;
       this.filterMovies();
-      console.log('look');
-  });
+    });
+
+    if(localStorage.getItem('card-view') != null) {
+      const value = localStorage.getItem('card-view');
+
+      if(value == 'true') {
+        this.showCards();
+      } else if(value == 'false') {
+        this.showList();
+      }
+    } 
   }
+  
 
   filterMovies() {
     if (!this.titleToSearchBy) {
@@ -59,36 +59,13 @@ export class CatalogComponent {
       this.filteredMovies = this.movies.filter(movie =>
         movie.title.toLowerCase().includes(lowerCaseTerm)
       );
-      
     }
-    console.log(this.filteredMovies);
   }
 
   // ngOnInit() : void {
-  //   this.subscription = this.dataService.movies$.subscribe(movies => {
-  //     this.movies = movies;
-  //     console.log(this.movies);
-  //   });
-
-  //   this.subscriptionOnReset = this.resetSortingService.resetSorting$.subscribe(() => this.chooseSortingOnReload());
-
-  //   if(localStorage.getItem('card-view') != null) {
-  //     const value = localStorage.getItem('card-view');
-
-  //     if(value == 'true') {
-  //       this.showCards();
-  //     } else if(value == 'false') {
-  //       this.showList();
-  //     }
-  //   }
-
   //   this.chooseSortingOnReload();
   // }
 
-  // ngOnDestroy() {
-  //   this.subscription.unsubscribe();
-  //   this.subscriptionOnReset.unsubscribe();
-  // }
 
   sortByYear() {
     //this.movies.sort((a, b) => a.year - b.year);
@@ -101,28 +78,28 @@ export class CatalogComponent {
   }
 
   sortByTitle() {
-    this.movies.sort((a, b) => {
-      const titleA = a.title.toLowerCase();
-      const titleB = b.title.toLowerCase();
+    // this.movies.sort((a, b) => {
+    //   const titleA = a.title.toLowerCase();
+    //   const titleB = b.title.toLowerCase();
     
-      if (titleA < titleB) return -1;
-      if (titleA > titleB) return 1;
-      return 0;
-    });
-    localStorage.setItem('filter', 'by-title');
+    //   if (titleA < titleB) return -1;
+    //   if (titleA > titleB) return 1;
+    //   return 0;
+    // });
+    // localStorage.setItem('filter', 'by-title');
   }
 
   sortByTitleDesc() {
-    this.movies.sort((a, b) => {
-      const titleA = a.title.toLowerCase();
-      const titleB = b.title.toLowerCase();
+    // this.movies.sort((a, b) => {
+    //   const titleA = a.title.toLowerCase();
+    //   const titleB = b.title.toLowerCase();
     
-      if (titleA > titleB) return -1;
-      if (titleA < titleB) return 1;
+    //   if (titleA > titleB) return -1;
+    //   if (titleA < titleB) return 1;
 
-      return 0;
-    });
-    localStorage.setItem('filter', 'by-title-desc');
+    //   return 0;
+    // });
+    // localStorage.setItem('filter', 'by-title-desc');
   }
 
   sortByDBAdding() {
@@ -171,9 +148,9 @@ export class CatalogComponent {
     }
   }
 
-  findMovie(title : string) {
-    this.movies.filter(movie => movie.title.toLowerCase() == title.toLowerCase());
-  }
+  // findMovie(title : string) {
+  //   this.movies.filter(movie => movie.title.toLowerCase() == title.toLowerCase());
+  // }
   
   showCards() {
     this.cardView = true;
@@ -187,7 +164,7 @@ export class CatalogComponent {
   applyFilter() {
     this.yearError = null;
 
-    this.yearError = ''; // Скидаємо помилки на початку
+    this.yearError = '';
 
     if (!this.yearFrom && !this.yearTo) {
       console.log('Filtering movies by genre only:', this.selectedGenre);

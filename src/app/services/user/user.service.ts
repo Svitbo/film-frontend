@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from 'src/app/entities/User';
 import { UserCreate } from 'src/app/entities/UserCreate';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +25,48 @@ export class UserService {
   setCurrentUser(user: User) {
     this.currentUser = user;
     localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  getToken(username: string, password: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+
+    const body = new URLSearchParams();
+    body.set('username', username);
+    body.set('password', password);
+
+    return this.http.post<any>(`${this.apiURL}/token`, body.toString(), { headers });
+  }
+
+  saveToken(token: string): void {
+    localStorage.setItem('access_token', token);
+  }
+
+  getTokenFromStorage(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  getUserRole(): string {
+    const token = this.getTokenFromStorage();
+    
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.role;
+    }
+    return '';
+  }
+
+  logout(): void {
+    localStorage.removeItem('access_token');
+  }
+
+  isLoggedIn() : boolean {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      return true;
+    }
+    return false;
   }
 
 
