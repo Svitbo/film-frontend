@@ -20,8 +20,7 @@ frontend-apply-prod: frontend-apply-dev
 frontend-destroy-dev:
 	docker compose -f compose.d/compose.yml \
 		down \
-		-t 3 \
-		--volumes
+		-t 3
 
 frontend-destroy-prod:
 	docker compose -f compose.d/compose.yml \
