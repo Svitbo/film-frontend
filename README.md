@@ -25,3 +25,19 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Supported Make Targets
+
+### Environment-Specific
+
+| Target                  | Action                                                  |
+| ----------------------- | ------------------------------------------------------- |
+| frontend-apply-${env}   | Builds static Angular files and serves them using Nginx |
+| frontend-destroy-${env} | Stops the Nginx Compose service.                        |
+
+### Project-Specific
+
+| Target       | Action                                                               |
+| ------------ | -------------------------------------------------------------------- |
+| node_modules | Downloads the Node.JS packages for the project                       |
+| core-logs    | Attaches terminal to the Docker Compose logs of all started services |
