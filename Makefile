@@ -1,6 +1,11 @@
 .ONESHELL: /usr/bin/bash
 .PHONY: frontend*
 
+# Environment setup targets
+
+node_modules:
+	npm ci
+
 # Docker Compose targets
 
 frontend-apply-dev:
@@ -22,3 +27,8 @@ frontend-destroy-prod:
 	docker compose -f compose.d/compose.yml \
 		down \
 		-t 3
+
+frontend-logs:
+	docker compose -f compose.d/compose.yml \
+		-f compose.d/compose.yml \
+		logs -f
