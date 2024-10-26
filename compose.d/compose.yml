@@ -1,15 +1,17 @@
+name: svitbo
+
 services:
   frontend:
     build:
       context: ..
       dockerfile: compose.d/Dockerfile.frontend
-    container_name: frontend
+    container_name: svitbo-frontend
     restart: unless-stopped
     ports:
       - "80:80"
     networks:
-      - composed_svitbo
+      - svitbo_general
 
 networks:
-  composed_svitbo:
+  svitbo_general:
     external: true
