@@ -22,10 +22,7 @@ frontend-destroy-dev:
 		down \
 		-t 3
 
-frontend-destroy-prod:
-	docker compose -f compose.d/compose.yml \
-		down \
-		-t 3
+frontend-destroy-prod: frontend-destroy-dev
 
 frontend-logs:
 	docker compose -f compose.d/compose.yml \
