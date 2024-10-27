@@ -1,4 +1,4 @@
-<!-- <div class="container text-center py-5" id="top">
+<div class="container text-center py-5" id="top">
     <div class="d-flex mb-4">
         <h2 id="icons" class="mb-0">Favorites</h2>
         <div class="dropdown ms-auto">
@@ -28,26 +28,20 @@
             </ul>
         </div>
     </div>
-    <div *ngIf="cardView; else listView">
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4  row-cols-lg-5 g-2 g-lg-3" >
-                <ng-container class="col" *ngFor="let movie of movies">
+    <!-- *ngIf="cardView; else listView" -->
+    <div>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4  row-cols-lg-5 g-2 g-lg-3" >
+            <ng-container class="col" *ngFor="let movie of filteredFavMovies">
                     <ng-container *ngIf="movie.isAddedToFavorites">
-                        <app-card 
-                    [cardId]="movie.id"
-                    [cardTitle]="movie.title" 
-                    [cardYear]="movie.year"
-                    [cardImage]="movie.posterPath"
-                    [cardRevenue]="movie.revenue"
-                    [cardDb]="movie.dateOfAdding"
-                    [isAddedToFavorites]="movie.isAddedToFavorites"
-                    [isAdded]="movie.isAdded"></app-card>
-                </ng-container>
+                        <app-card [movie]="movie"></app-card>
+                    </ng-container>
+                    
             </ng-container>
         </div>
     </div>
 
 
-    <ng-template #listView>
+    <!-- <ng-template #listView>
         <div class="container">
             <div class="row row-cols-1 row-cols-lg-2">
                 <ng-container class="col" *ngFor="let movie of movies">
@@ -66,5 +60,5 @@
                 </ng-container>
             </div>
         </div>
-    </ng-template>
-</div> -->
+    </ng-template> -->
+</div>

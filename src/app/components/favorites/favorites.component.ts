@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { Movie } from 'src/app/entities/Movie';
 import { DataService } from 'src/app/services/data/data.service';
 import { ResetSortingService } from 'src/app/services/reset-sorting/reset-sorting.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-favorites',
@@ -10,22 +11,43 @@ import { ResetSortingService } from 'src/app/services/reset-sorting/reset-sortin
   styleUrls: ['./favorites.component.scss']
 })
 export class FavoritesComponent {
+  titleToSearchBy: string = '';
+
   movies : Movie[] = [];
-  isAddedToFavorites : boolean = false;
+  favoriteMovies : Movie[] = []; 
+  filteredMovies : Movie[] = [];
+
+  filteredFavMovies : Movie[] = []
   cardView! : boolean;
 
-  private subscription! : Subscription;
-  private subscriptionOnReset! : Subscription;
-
-  constructor(private dataService : DataService, private resetSortingService : ResetSortingService) { }
+  constructor(private dataService : DataService, private resetSortingService : ResetSortingService, private userService : UserService) { }
 
   ngOnInit() : void {
-    this.subscription = this.dataService.movies$.subscribe(movies => {
+    this.dataService.movies$.subscribe(movies => {
       this.movies = movies;
-      console.log(this.movies);
+      this.filteredMovies = this.movies;
+      this.checkAddedToFavorites();
     });
   
-    this.subscriptionOnReset = this.resetSortingService.resetSorting$.subscribe(()=> this.chooseSortingOnReload());
+    // Отримуємо улюблені фільми
+    this.userService.getFavoriteFilms();
+  
+    this.userService.favoriteMovies$.subscribe(movies => {
+      this.favoriteMovies = movies;
+      this.checkAddedToFavorites(); // Оновлюємо після отримання улюблених фільмів
+    });
+  
+    this.dataService.titleToSearchBy$.subscribe(title => {
+      this.titleToSearchBy = title;
+      this.filterMovies();
+      this.checkAddedToFavorites();
+    });
+  
+    // Залиште ваші консольні логування для налагодження
+    console.log('All movies', this.movies);
+    console.log('Filtered movies', this.filteredMovies);
+    console.log('Favorite movies', this.favoriteMovies);
+
 
     if(localStorage.getItem('card-view') != null) {
       const value = localStorage.getItem('card-view');
@@ -40,10 +62,26 @@ export class FavoritesComponent {
     this.chooseSortingOnReload();
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-    this.subscriptionOnReset.unsubscribe();
+  checkAddedToFavorites() {
+    this.filteredFavMovies = this.filteredMovies.map(movie => ({
+      ...movie,
+      isAddedToFavorites: this.favoriteMovies.some(fav => fav.id === movie.id)
+    }));
+    
+    console.log(this.filteredFavMovies);
   }
+  
+  filterMovies() {
+    if (!this.titleToSearchBy) {
+      this.filteredMovies = this.movies;
+    } else {
+      const lowerCaseTerm = this.titleToSearchBy.toLowerCase();
+      this.filteredMovies = this.movies.filter(movie =>
+        movie.title.toLowerCase().includes(lowerCaseTerm)
+      );
+    }
+  }
+
 
   sortByYear() {
     //this.movies.sort((a, b) => a.year - b.year);
@@ -56,28 +94,28 @@ export class FavoritesComponent {
   }
 
   sortByTitle() {
-    this.movies.sort((a, b) => {
-      const titleA = a.title.toLowerCase();
-      const titleB = b.title.toLowerCase();
+    // this.movies.sort((a, b) => {
+    //   const titleA = a.title.toLowerCase();
+    //   const titleB = b.title.toLowerCase();
     
-      if (titleA < titleB) return -1;
-      if (titleA > titleB) return 1;
-      return 0;
-    });
-    localStorage.setItem('filter', 'by-title');
+    //   if (titleA < titleB) return -1;
+    //   if (titleA > titleB) return 1;
+    //   return 0;
+    // });
+    // localStorage.setItem('filter', 'by-title');
   }
 
   sortByTitleDesc() {
-    this.movies.sort((a, b) => {
-      const titleA = a.title.toLowerCase();
-      const titleB = b.title.toLowerCase();
+    // this.movies.sort((a, b) => {
+    //   const titleA = a.title.toLowerCase();
+    //   const titleB = b.title.toLowerCase();
     
-      if (titleA > titleB) return -1;
-      if (titleA < titleB) return 1;
+    //   if (titleA > titleB) return -1;
+    //   if (titleA < titleB) return 1;
 
-      return 0;
-    });
-    localStorage.setItem('filter', 'by-title-desc');
+    //   return 0;
+    // });
+    // localStorage.setItem('filter', 'by-title-desc');
   }
 
   sortByDBAdding() {
@@ -101,29 +139,29 @@ export class FavoritesComponent {
   }
 
   resetSorting() {
-    this.movies = JSON.parse(localStorage.getItem('movies')!);
-    localStorage.removeItem('filter');
+    // this.movies = JSON.parse(localStorage.getItem('movies')!);
+    // localStorage.removeItem('filter');
   }
 
   chooseSortingOnReload() {
-    const filter = localStorage.getItem('filter');
+    // const filter = localStorage.getItem('filter');
   
-    if(filter == 'by-year') {
-      this.sortByYear();
-    } else if(filter == 'by-year-desc') {
-      this.sortByYearDesc();
-    } else if(filter == 'by-title') {
-      this.sortByTitle();
-    } else if(filter == 'by-title-desc') {
-      this.sortByTitleDesc();
-    } else if(filter == 'by-db-adding') {
-      this.sortByDBAdding();
-    } else if(filter == 'by-db-adding-desc') {
-      this.sortByDBAddingDesc();
-    }
-    else {
-      this.resetSorting();
-    }
+    // if(filter == 'by-year') {
+    //   this.sortByYear();
+    // } else if(filter == 'by-year-desc') {
+    //   this.sortByYearDesc();
+    // } else if(filter == 'by-title') {
+    //   this.sortByTitle();
+    // } else if(filter == 'by-title-desc') {
+    //   this.sortByTitleDesc();
+    // } else if(filter == 'by-db-adding') {
+    //   this.sortByDBAdding();
+    // } else if(filter == 'by-db-adding-desc') {
+    //   this.sortByDBAddingDesc();
+    // }
+    // else {
+    //   this.resetSorting();
+    // }
   }
 
   showCards() {
