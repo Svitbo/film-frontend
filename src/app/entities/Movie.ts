@@ -9,6 +9,6 @@ export interface Movie {
     revenue : number;
     created_at : Date;
     description : string;
-    //posterPath : string;
-    //isAddedToFavorites : boolean;
+    cover_image : File;
+    isAddedToFavorites : boolean;
 }

@@ -1,46 +1,79 @@
 <div class="card h-100">
     <!-- [ngStyle]="{ 'aspect-ratio': '0.66666' }" -->
-    <img [src]="moviePosterPath" class="card-img-top"  alt="poster">
+    <img [src]="movie.cover_image" class="card-img-top" [ngStyle]="{ 'aspect-ratio': '0.66666' }"  alt="poster">
     <div class="card-body d-flex flex-column">
-        <h5 class="card-title">{{ movieTitle }}</h5>
-        <p class="card-text">{{ movieGenre }}</p>
-        <p class="card-text">{{ movieProductionYear }}, {{ movieProductionCountry }}</p>
-        <!-- <div class="icons  d-flex justify-content-center mt-auto" *ngIf="noPermission()">
-            <img [src]="isAddedToFavorites ? 'assets/img/star-fill.svg' : 'assets/img/star.svg'" (click)="toggleFavorites()" alt="favorites button" class="mx-1" role="button" tabindex="0">
+        <h5 class="card-title">{{ movie.title }}</h5>
+        <p class="card-text">{{ movie.genre }}</p>
+        <p class="card-text">{{ movie.production_year }}, {{ movie.production_country }}</p>
+        <div class="icons  d-flex justify-content-center mb-3" *ngIf="favoritesPermission() || editPermission()">
+            <img *ngIf="favoritesPermission()" [src]="movie.isAddedToFavorites ? 'assets/img/star-fill.svg' : 'assets/img/star.svg'" (click)="toggleFavorites()" alt="favorites button" class="mx-1" role="button" tabindex="0">
             <img *ngIf="editPermission()" (click)="openModal(updateModal)" src="assets/img/pencil.svg" alt="edit button" class="mx-1" role="button" tabindex="0">
             <img *ngIf="editPermission()" (click)="deleteMovie()" src="assets/img/trash.svg" alt="delete button" class="mx-1" role="button" tabindex="0">
-        </div> -->
-        <a [routerLink]="['/film', movieId]" class="btn btn-primary mt-4">More info</a>
+        </div>
+        <a [routerLink]="['/film', movie.id]" class="btn btn-primary mt-auto">More info</a>
     </div>
 </div>
-<!--     
+    
 
 <ng-template #updateModal>
     <div>
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="addModal">Add Movie</h1>
+            <h1 class="modal-title fs-5" id="addModal">Edit Movie</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modalRef?.hide()"></button>
         </div>
         <div class="modal-body">
             <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Movie</label>
-                    <input type="text" class="form-control" id="name" aria-describedby="name" formControlName="title">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" formControlName="title" [class.is-invalid]="updateForm.get('title')?.invalid && updateForm.get('title')?.touched">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="genre" class="form-label">Genre</label>
+                        <select class="form-control" id="genre" formControlName="genre" [class.is-invalid]="updateForm.get('genre')?.invalid && updateForm.get('genre')?.touched">
+                            <option value="">Select Genre</option>
+                            <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="year" class="form-label">Year</label>
-                    <input type="text" class="form-control" id="year" aria-describedby="year" formControlName="year">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="production_year" class="form-label">Year</label>
+                        <input type="number" class="form-control" id="production_year" formControlName="production_year" [class.is-invalid]="updateForm.get('production_year')?.invalid && updateForm.get('production_year')?.touched">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="production_country" class="form-label">Production Country</label>
+                        <select class="form-control" id="production_country" formControlName="production_country" [class.is-invalid]="updateForm.get('production_country')?.invalid && updateForm.get('production_country')?.touched">
+                            <option value="">Select Country</option>
+                            <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="producer" class="form-label">Producer</label>
+                        <select class="form-control" id="producer" formControlName="producer" [class.is-invalid]="updateForm.get('producer')?.invalid && updateForm.get('producer')?.touched">
+                            <option value="">Select Producer</option>
+                            <option *ngFor="let producer of producers" [value]="producer">{{ producer }}</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="revenue" class="form-label">Revenue</label>
-                    <input type="text" class="form-control" id="revenue" aria-describedby="revenue" formControlName="revenue">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="duration_minutes" formControlName="duration_minutes" [class.is-invalid]="updateForm.get('duration_minutes')?.invalid && updateForm.get('duration_minutes')?.touched">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="revenue" class="form-label">Revenue</label>
+                        <input type="number" class="form-control" id="revenue" formControlName="revenue" [class.is-invalid]="updateForm.get('revenue')?.invalid && updateForm.get('revenue')?.touched">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="file" class="form-label">File</label>
-                    <input type="file" class="form-control" id="file" formControlName="file">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" formControlName="description" [class.is-invalid]="updateForm.get('description')?.invalid && updateForm.get('description')?.touched" [ngStyle]="{'height': '150px'}"></textarea>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
-</ng-template> -->
+</ng-template>

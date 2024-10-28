@@ -7,7 +7,7 @@ import { FilmComponent } from './components/film/film.component';
 
 const routes: Routes = [
   { path: "catalog", component: CatalogComponent },
-  { path: "favorites", component: FavoritesComponent, canActivate: [favoritesGuard] },
+  { path: "favorites", component: FavoritesComponent },
   { path: "film/:id", component: FilmComponent },
   { path: "", redirectTo: "/catalog", pathMatch: "full" },
 ];
