@@ -8,7 +8,6 @@
 
 # Docker files
 compose.d/
-nginx.d/
 
 # Node
 /node_modules
