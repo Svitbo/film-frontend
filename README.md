@@ -1,4 +1,4 @@
-# Svitbo Frontend
+# 🏊‍♀️ Svitbo Frontend
 
 The frontend part of the Svitbo project.
 
