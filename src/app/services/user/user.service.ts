@@ -13,7 +13,7 @@ import { response } from 'express';
   providedIn: 'root'
 })
 export class UserService {
-  private apiURL = "http://localhost:9000";
+  private apiURL = "/api/";
 
   private currentUser: User | null = null;
 
