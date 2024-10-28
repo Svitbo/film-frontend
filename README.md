@@ -1,27 +1,52 @@
-# FilmCatalog
+# 🏊‍♀️ Svitbo Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.0.
+The frontend part of the Svitbo project.
 
-## Development server
+Suits well with the [Svitbo core](https://github.com/Svitbo/film-core).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Requirements
 
-## Code scaffolding
+The list of requirements needed to bootstrap the frontend:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Node.JS LTS with NPM bundled in
+- Docker with Compose plugin
+- Make
 
-## Build
+## Environments
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Currently, the frontend part supports two environments:
 
-## Running unit tests
+- `prod`:
+  - Starts the Nginx service with pre-build Angular static content
+- `dev`:
+  - Operates in the same way as `prod`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## How to Start
 
-## Running end-to-end tests
+Start local service instances using Docker Compose functionality:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```shell
+# This can take some time on the first run
+make frontend-apply-dev
 
-## Further help
+# Or, if you want to simulate prod environment:
+make frontend-apply-prod
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Now you can reach static frontend targeting the `http://localhost`.
+
+## Supported Make Targets
+
+### Environment-Specific
+
+| Target                  | Action                                                  |
+| ----------------------- | ------------------------------------------------------- |
+| frontend-apply-${env}   | Builds static Angular files and serves them using Nginx |
+| frontend-destroy-${env} | Stops the Nginx Compose service.                        |
+
+### Project-Specific
+
+| Target        | Action                                                               |
+| ------------- | -------------------------------------------------------------------- |
+| node_modules  | Downloads the Node.JS packages for the project                       |
+| frontend-logs | Attaches terminal to the Docker Compose logs of all started services |

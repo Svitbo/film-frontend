@@ -8,6 +8,7 @@
 
 # Docker files
 compose.d/
+!compose.d/entrypoint*.sh
 
 # Node
 /node_modules
