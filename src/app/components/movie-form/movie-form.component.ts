@@ -4,6 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Movie } from 'src/app/entities/Movie';
 import { MovieCreate } from 'src/app/entities/MovieCreate';
 import { DataService } from 'src/app/services/data/data.service';
+import { fileValidator } from 'src/app/validators/FileValidator';
 
 @Component({
   selector: 'app-movie-form',
@@ -18,6 +19,9 @@ export class MovieFormComponent {
   countries : string[] = ["USA", "UK", "Canada", "France"];
   producers : string[] = ["Legendary Pictures", "Warner Bros.", "Universal", "Pixar", "Disney", "Frank Darabont"];
 
+  selectedFile: File | null = null;
+
+
 
   constructor(private fb: FormBuilder, private dataService: DataService, private modalService : BsModalService) {
     this.addForm = this.fb.group({
@@ -29,14 +33,19 @@ export class MovieFormComponent {
       duration_minutes: ['', Validators.required],
       revenue: ['', Validators.required],
       description: ['', Validators.required],
+      cover_image: ['', fileValidator()]
     });
   }
 
   ngOnInit(): void { }
 
+
   onSubmit() {
 
+    // console.log('Значення форми:', this.addForm.value);
+    // console.log('Стан форми:', this.addForm);
     if (this.addForm.valid) {
+      console.log('valid');
       const newMovie: MovieCreate = {
         title: this.addForm.get('title')?.value,
         genre: this.addForm.get('genre')?.value,
@@ -45,31 +54,45 @@ export class MovieFormComponent {
         producer: this.addForm.get('producer')?.value,
         duration_minutes: this.addForm.get('duration_minutes')?.value,
         revenue: this.addForm.get('revenue')?.value,
-        description: this.addForm.get('description')?.value,
+        description: this.addForm.get('description')?.value
       };
-  
-      console.log(newMovie);
-      this.dataService.addMovie(newMovie).subscribe(
+
+      const formData = new FormData();
+      formData.append("cover_image", this.selectedCoverImage!, this.selectedCoverImage?.name);
+      console.log(formData.get('cover_image'));
+
+      this.dataService.addMovie(newMovie, formData).subscribe(
         (response) => {
           console.log('Movie added:', response);
-          
         },
         (error) => {
           console.error('Error adding movie:', error);
         }
       );
-
       this.modalRef?.hide();
 
-    } else {
-      // Optionally mark all fields as touched to show validation errors
+  } else {
+      console.log('invalid');
       this.addForm.markAllAsTouched();
-    }
-    
   }
+  }
+
 
   openModal(template : TemplateRef<any> | undefined) {
     this.modalRef = this.modalService.show(template!);
+  }
+
+  selectedCoverImage: File | null = null;
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+        this.selectedCoverImage = input.files[0];
+        console.log(this.selectedCoverImage);
+        this.addForm.patchValue({ cover_image: this.selectedCoverImage });
+        this.addForm.get('cover_image')?.updateValueAndValidity();
+        console.log("cover_image у FormGroup:", this.addForm.get('cover_image')?.value);
+    }
   }
 
 

@@ -10,21 +10,22 @@ import { DataService } from 'src/app/services/data/data.service';
   styleUrls: ['./list-item.component.scss']
 })
 export class ListItemComponent {
-  @Input() movieId! : number;
-  @Input() movieTitle! : string;
-  @Input() movieGenre! : string;
-  @Input() movieProductionYear! : number;
-  @Input() movieProductionCountry! : string;
-  @Input() movieProducer! : string;
-  @Input() movieDurationMinutes! : number;
-  @Input() movieRevenue! : number;
-  @Input() movieCreatedAt! : Date;
-  @Input() movieDescription! : string;
+  // @Input() movieId! : number;
+  // @Input() movieTitle! : string;
+  // @Input() movieGenre! : string;
+  // @Input() movieProductionYear! : number;
+  // @Input() movieProductionCountry! : string;
+  // @Input() movieProducer! : string;
+  // @Input() movieDurationMinutes! : number;
+  // @Input() movieRevenue! : number;
+  // @Input() movieCreatedAt! : Date;
+  // @Input() movieDescription! : string;
 
-  @Input() moviePosterPath! : string;
+  // @Input() moviePosterPath! : string;
   //@Input() isAddedToFavorites : boolean = false;
 
-  movie! : Movie;
+  @Input() movie! : Movie;
+  
   modalRef? : BsModalRef;
   updateForm : FormGroup;
 
@@ -38,19 +39,20 @@ export class ListItemComponent {
   }
 
   ngOnInit() {
-    this.movie = {
-      id: this.movieId,
-      title: this.movieTitle,
-      genre: this.movieGenre,
-      production_year: this.movieProductionYear,
-      production_country: this.movieProductionCountry,
-      producer: this.movieProducer,
-      duration_minutes: this.movieDurationMinutes,
-      revenue: this.movieRevenue,
-      created_at: this.movieCreatedAt,
-      description: this.movieDescription,
-      // posterPath: this.moviePosterPath
-    };
+    // this.movie = {
+    //   id: this.movieId,
+    //   title: this.movieTitle,
+    //   genre: this.movieGenre,
+    //   production_year: this.movieProductionYear,
+    //   production_country: this.movieProductionCountry,
+    //   producer: this.movieProducer,
+    //   duration_minutes: this.movieDurationMinutes,
+    //   revenue: this.movieRevenue,
+    //   created_at: this.movieCreatedAt,
+    //   description: this.movieDescription,
+    //   posterPath: this.moviePosterPath,
+    //   isAddedToFavorites: this.movie.isAddedToFavorites
+    // };
 
     console.log('list-item');
     console.log(this.movie);

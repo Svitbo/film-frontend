@@ -71,23 +71,24 @@
             </ul> -->
         </div>
     </div>
-    <!-- *ngIf="cardView; else listView" -->
+    
     <div *ngIf="cardView; else listView">
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4  row-cols-lg-5 g-2 g-lg-3">
-            <div class="col" *ngFor="let movie of filteredMovies">
-                <app-card 
+            <div class="col" *ngFor="let movie of filteredFavMovies">
+                <!-- <app-card 
                 [movieId]="movie.id"
                 [movieTitle]="movie.title" 
                 [movieGenre]="movie.genre"
                 [movieProductionYear]="movie.production_year"
                 [movieProductionCountry]="movie.production_country"
-                [moviePosterPath]="'/assets/img/dune.jpg'"></app-card>
+                [moviePosterPath]="'/assets/img/dune.jpg'"></app-card> -->
+                <app-card [movie]="movie"></app-card>
             </div>
         </div>
     </div>
 
     <ng-template #listView>
-        <div class="container">
+        <!-- <div class="container">
             <div class="row row-cols-1 row-cols-lg-2">
                 <div class="col" *ngFor="let movie of filteredMovies">
                    <app-list-item 
@@ -99,7 +100,7 @@
                     [moviePosterPath]="'/assets/img/dune.jpg'"></app-list-item>
                 </div>
             </div>
-        </div>
+        </div> -->
     </ng-template>
 </div>
 

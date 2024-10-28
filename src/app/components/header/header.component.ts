@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataService } from 'src/app/services/data/data.service';
 import { ThemeToggleService } from 'src/app/services/theme-toggle/theme-toggle.service';
 import { ResetSortingService } from 'src/app/services/reset-sorting/reset-sorting.service';
+import { User } from 'src/app/entities/User';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-header',
@@ -15,9 +17,10 @@ export class HeaderComponent implements OnInit{
 
   constructor(
     private formBuilder : FormBuilder,
-     private themeService : ThemeToggleService,
-     private dataService : DataService,
-     private resetSortingService : ResetSortingService) {
+    private themeService : ThemeToggleService,
+    private dataService : DataService,
+    private resetSortingService : ResetSortingService,
+    private userService : UserService) {
     this.searchForm = formBuilder.group({
       title: ['']
     });
@@ -41,9 +44,27 @@ export class HeaderComponent implements OnInit{
   resetFilters() {
     // localStorage.removeItem('filter');
     // this.resetSortingService.trigger();
-    // this.scrollToTop();
+    this.scrollToTop();
     this.searchForm.get('title')?.setValue('');
     this.dataService.updateTitleToSearchBy('');
+  }
+
+  addMoviePermission() {
+    let role = this.userService.getUserRole();
+
+    if(role == 'admin') {
+      return true;
+    }
+    return false;
+  }
+
+  favoritesPermission() {
+    let role = this.userService.getUserRole();
+
+    if(role == 'user') {
+      return true;
+    }
+    return false;
   }
 
 
@@ -75,30 +96,8 @@ export class HeaderComponent implements OnInit{
     //this.dataService.findByTitle(title);
   }
 
-  favoritesPermission() {
-    let role = localStorage.getItem('role');
 
-    if(role == null || role == 'Guest') {
-      return false;
-    } 
-    return true;
-  }
 
-  usersPermission() {
-    let role = localStorage.getItem('role');
 
-    if(role != 'Admin') {
-      return false;
-    } 
-    return true;
-  }
 
-  addPermission() {
-    let role = localStorage.getItem('role');
-
-    if(role == 'Admin' || role == 'Moderator') {
-      return true;
-    } 
-    return false;
-  }
 }
