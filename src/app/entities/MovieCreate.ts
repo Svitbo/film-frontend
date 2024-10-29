@@ -7,6 +7,4 @@ export interface MovieCreate {
     duration_minutes : number;
     revenue : number;
     description : string;
-    //posterPath : string;
-    //isAddedToFavorites : boolean;
 }
