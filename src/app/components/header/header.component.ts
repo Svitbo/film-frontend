@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataService } from 'src/app/services/data/data.service';
 import { ThemeToggleService } from 'src/app/services/theme-toggle/theme-toggle.service';
-import { ResetSortingService } from 'src/app/services/reset-sorting/reset-sorting.service';
-import { User } from 'src/app/entities/User';
 import { UserService } from 'src/app/services/user/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -14,24 +13,29 @@ import { UserService } from 'src/app/services/user/user.service';
 export class HeaderComponent implements OnInit{
   searchForm : FormGroup;
   isLightTheme : boolean = true;
+  showSearch: boolean = true;
 
   constructor(
     private formBuilder : FormBuilder,
     private themeService : ThemeToggleService,
     private dataService : DataService,
-    private resetSortingService : ResetSortingService,
-    private userService : UserService) {
+    private userService : UserService,
+    private router: Router) {
     this.searchForm = formBuilder.group({
       title: ['']
     });
   }
 
   ngOnInit() {
-    // const current = this.themeService.getCurrentTheme();
-    // this.themeService.setTheme(current);
+    const current = this.themeService.getCurrentTheme();
+    this.themeService.setTheme(current);
 
-    // if(current == 'light') this.isLightTheme = true;
-    // if(current == 'dark') this.isLightTheme = false;
+    if(current == 'light') this.isLightTheme = true;
+    if(current == 'dark') this.isLightTheme = false;
+
+    this.router.events.subscribe(() => {
+      this.showSearch = this.router.url !== '/home';
+    });
   }
 
   onSubmit() {
@@ -42,8 +46,6 @@ export class HeaderComponent implements OnInit{
   }
 
   resetFilters() {
-    // localStorage.removeItem('filter');
-    // this.resetSortingService.trigger();
     this.scrollToTop();
     this.searchForm.get('title')?.setValue('');
     this.dataService.updateTitleToSearchBy('');
@@ -67,16 +69,6 @@ export class HeaderComponent implements OnInit{
     return false;
   }
 
-
-
-
-
-
-
-
-
-
-
   lightTheme(): void {
     this.themeService.setTheme('light');
     this.isLightTheme = true;
@@ -87,17 +79,7 @@ export class HeaderComponent implements OnInit{
     this.isLightTheme = false;
   }
 
-
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  findMovie(title: string): void {
-    //this.dataService.findByTitle(title);
-  }
-
-
-
-
-
 }

@@ -1,21 +1,18 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
 import { Movie } from 'src/app/entities/Movie';
 import { MovieCreate } from 'src/app/entities/MovieCreate';
 import { UserService } from '../user/user.service';
-import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  private apiURL = "http://localhost:9000/films";
+  private apiURL = "/api/films/";
 
   private moviesSubject = new BehaviorSubject<Movie[]>([]);
   movies$ : Observable<Movie[]> = this.moviesSubject.asObservable();
-
-
 
   private titleToSearchBy = new BehaviorSubject<string>('');
   titleToSearchBy$ = this.titleToSearchBy.asObservable();
@@ -39,27 +36,29 @@ export class DataService {
     this.titleToSearchBy.next(title);
   }
 
-  addMovie(movie: MovieCreate, coverImage : FormData): Observable<Movie> {
+  addMovie(movie: MovieCreate, coverImage: FormData): Observable<Movie> {
     const token = this.userService.getTokenFromStorage();
-
+  
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
-
+  
     return this.http.post<Movie>(`${this.apiURL}/`, movie, { headers }).pipe(
-      tap((newMovie: Movie) => {
-        this.uploadCoverImage(newMovie.id, coverImage).subscribe(
-          (response) => {
+      switchMap((newMovie: Movie) => {
+        return this.uploadCoverImage(newMovie.id, coverImage).pipe(
+          tap((response) => {
             console.log('Cover image uploaded successfully:', response);
-          },
-          (error) => {
-            console.error('Error uploading cover image:', error.detail);
-          }
+          }),
+          map(() => newMovie)
         );
+      }),
+      tap(() => {
         this.getMovies();
-        
+      }),
+      catchError((error) => {
+        console.error('Error uploading cover image:', error.detail);
+        return throwError(error);
       })
     );
   }
@@ -71,7 +70,6 @@ export class DataService {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    console.log(updatedMovie);
 
     return this.http.put(`${this.apiURL}/${movieId}`, updatedMovie, { headers }).pipe(
       tap(() => this.getMovies())
@@ -86,7 +84,6 @@ export class DataService {
       'Content-Type': 'application/json'
     });
 
-    console.log(`${this.apiURL}/${movieId}`)
     return this.http.delete(`${this.apiURL}/${movieId}`, { headers }).pipe(
       tap(() => this.getMovies())
     );
@@ -95,16 +92,18 @@ export class DataService {
   uploadCoverImage(filmId: number, coverImage: FormData): Observable<any> {
     const token = this.userService.getTokenFromStorage();
     
-
     const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data'
     });
 
-    console.log(coverImage.get('cover_image'));
-
-
     return this.http.post<any>(`${this.apiURL}/${filmId}/upload-cover`, coverImage, { headers });
-}
+  }
 
+  getSortedFilms(sortBy: string, sortOrder: string = 'asc'): Observable<Movie[]> {
+    let params = new HttpParams()
+      .set('sort_by', sortBy)
+      .set('sort_order', sortOrder);
+
+    return this.http.get<Movie[]>(`${this.apiURL}/`, { params });
+  }
 }

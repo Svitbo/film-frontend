@@ -12,21 +12,8 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./card.component.scss']
 })
 export class CardComponent {
-  // @Input() movieId! : number;
-  // @Input() movieTitle! : string;
-  // @Input() movieGenre! : string;
-  // @Input() movieProductionYear! : number;
-  // @Input() movieProductionCountry! : string;
-  // @Input() movieProducer! : string;
-  // @Input() movieDurationMinutes! : number;
-  // @Input() movieRevenue! : number;
-  // @Input() movieCreatedAt! : Date;
-  // @Input() movieDescription! : string;
-
-  // @Input() moviePosterPath! : string;
-
   @Input() movie! : any;
-  //@Input() isAddedToFavorites : boolean = false;
+  @Input() toEdit! : boolean;
 
   modalRef? : BsModalRef;
   updateForm : FormGroup;
@@ -34,7 +21,6 @@ export class CardComponent {
   genres : string[] = ["Action", "Drama", "Comedy", "Horror", "Science fiction"];
   countries : string[] = ["USA", "UK", "Canada", "France"];
   producers : string[] = ["Legendary Pictures", "Warner Bros.", "Universal", "Pixar", "Disney", "Frank Darabont"];
-
 
   constructor(private dataService : DataService, private modalService : BsModalService, private formBuilder : FormBuilder, private userService : UserService) {
     this.updateForm = formBuilder.group({
@@ -49,27 +35,10 @@ export class CardComponent {
     });
   }
 
-  ngOnInit() {
-    console.log(this.movie.cover_image);
-    // this.movie = {
-    //   id: this.movieId,
-    //   title: this.movieTitle,
-    //   genre: this.movieGenre,
-    //   production_year: this.movieProductionYear,
-    //   production_country: this.movieProductionCountry,
-    //   producer: this.movieProducer,
-    //   duration_minutes: this.movieDurationMinutes,
-    //   revenue: this.movieRevenue,
-    //   created_at: this.movieCreatedAt,
-    //   description: this.movieDescription,
-    //   // posterPath: this.moviePosterPath
-    // };
-  }
-
   editPermission() {
     let role = this.userService.getUserRole();
 
-    if(role == 'admin') {
+    if(role == 'admin' && this.toEdit) {
       return true;
     }
     return false;
@@ -78,27 +47,13 @@ export class CardComponent {
   favoritesPermission() {
     let role = this.userService.getUserRole();
 
-    if(role == 'user') {
+    if(role == 'user' && this.toEdit) {
       return true;
     }
     return false;
   }
 
   fillFormForEditing(movie : Movie) {
-    // if (movie) {
-    //   this.updateForm.patchValue({
-    //     id: this.movieId,
-    //     title: this.movieTitle,
-    //     genre: this.movieGenre,
-    //     production_year: this.movieProductionYear,
-    //     production_country: this.movieProductionCountry,
-    //     producer: this.movieProducer,
-    //     duration_minutes: this.movieDurationMinutes,
-    //     revenue: this.movieRevenue,
-    //     created_at: this.movieCreatedAt,
-    //     description: this.movieDescription,
-    //   });
-    // }
     if (movie) {
       this.updateForm.patchValue({
         id: this.movie.id,
@@ -132,7 +87,6 @@ export class CardComponent {
     );
   }
 
-
   toggleFavorites() {
     console.log(this.movie.isAddedToFavorites);
     if (this.movie.isAddedToFavorites) {
@@ -145,16 +99,9 @@ export class CardComponent {
       });
     }
   }
-
-
-
-
-
+  
   onSubmit() {    
-    if(this.updateForm.valid) {
-      // const fileName : string = this.updateForm.get('file')!.value.split('\\').pop();
-      // const fullPath : string = `assets/img/${fileName}`;
-    
+    if(this.updateForm.valid) {    
       const newMovie: MovieCreate = {
         title: this.updateForm.get('title')?.value,
         genre: this.updateForm.get('genre')?.value,
@@ -179,6 +126,4 @@ export class CardComponent {
       this.modalRef!.hide();
     }
   }
-
-
 }

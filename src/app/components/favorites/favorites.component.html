@@ -23,42 +23,31 @@
                 <li class="dropdown-item" (click)="sortByYearDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by year (desc)</li>
                 <li class="dropdown-item" (click)="sortByTitle()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by title</li>
                 <li class="dropdown-item" (click)="sortByTitleDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by title (desc)</li>
-                <li class="dropdown-item" (click)="sortByDBAdding()" [ngStyle]="{ 'cursor': 'pointer' }">Least Recently Added</li>
-                <li class="dropdown-item" (click)="sortByDBAddingDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Most Recently Added</li>
+                <li class="dropdown-item" (click)="sortByLeastRecentlyAdded()" [ngStyle]="{ 'cursor': 'pointer' }">Least Recently Added</li>
+                <li class="dropdown-item" (click)="sortByRecentlyAdded()" [ngStyle]="{ 'cursor': 'pointer' }">Most Recently Added</li>
             </ul>
         </div>
     </div>
-    <!-- *ngIf="cardView; else listView" -->
-    <div>
+    
+    <div *ngIf="cardView; else listView">
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4  row-cols-lg-5 g-2 g-lg-3" >
             <ng-container class="col" *ngFor="let movie of filteredFavMovies">
                     <ng-container *ngIf="movie.isAddedToFavorites">
-                        <app-card [movie]="movie"></app-card>
+                        <app-card [movie]="movie" [toEdit]="true"></app-card>
                     </ng-container>
-                    
             </ng-container>
         </div>
     </div>
-
-
-    <!-- <ng-template #listView>
+    
+    <ng-template #listView>
         <div class="container">
             <div class="row row-cols-1 row-cols-lg-2">
-                <ng-container class="col" *ngFor="let movie of movies">
+                <ng-container class="col" *ngFor="let movie of filteredFavMovies">
                     <ng-container *ngIf="movie.isAddedToFavorites">
-                        <app-list-item 
-                        [cardId]="movie.id"
-                        [cardTitle]="movie.title" 
-                        [cardYear]="movie.year"
-                        [cardImage]="movie.posterPath"
-                        [cardRevenue]="movie.revenue"
-                        [cardDb]="movie.dateOfAdding"
-                        [isAddedToFavorites]="movie.isAddedToFavorites"
-                        [isAdded]="movie.isAdded"></app-list-item>
+                        <app-list-item [movie]="movie"></app-list-item>
                     </ng-container>
-                   
                 </ng-container>
             </div>
         </div>
-    </ng-template> -->
+    </ng-template>
 </div>

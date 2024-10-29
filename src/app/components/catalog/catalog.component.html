@@ -14,50 +14,8 @@
                 <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M19.4 4.6H4.6v14.8h14.8V4.6zm-15.8-1v16.8h16.8V3.6H3.6z"></path>
             </svg>
-            <!-- <button class="btn btn-primary dropdown-toggle me-3 ms-3" type="button" data-bs-toggle="modal" data-bs-target="#filterModal "
-                aria-expanded="false">
-                Filter
-            </button> -->
 
-
-            <!-- <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="filterModalLabel">Filter Movies</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form (ngSubmit)="applyFilter()" #filterForm="ngForm">
-                        <div class="mb-3">
-                          <label for="genre" class="form-label">Genre</label>
-                          <select id="genre" class="form-select" [(ngModel)]="selectedGenre" name="genre" required>
-                            <option value="" disabled selected>Select genre</option>
-                            <option value="all">All genres</option>
-                            <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
-                          </select>
-                          <div *ngIf="filterForm.controls['genre']?.invalid && filterForm.controls['genre']?.touched" class="text-danger">
-                            Genre is required.
-                          </div>
-                        </div>
-                        <div class="mb-3">
-                          <label for="yearRange" class="form-label">Release Year Range</label>
-                          <div class="d-flex gap-2">
-                            <input type="number" id="yearFrom" class="form-control" [(ngModel)]="yearFrom" name="yearFrom" placeholder="From" min="1900" max="2024">
-                            <input type="number" id="yearTo" class="form-control" [(ngModel)]="yearTo" name="yearTo" placeholder="To" min="1900" max="2024">
-                          </div>
-                          <div *ngIf="yearError" class="text-danger mt-2">{{ yearError }}</div>
-                        </div>
-                        <button type="submit" class="btn btn-primary" [disabled]="filterForm.invalid">Apply Filter</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-            </div>
-               -->
-
-              
-            <!-- <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 Sort Movies
             </button>
@@ -66,43 +24,27 @@
                 <li class="dropdown-item" (click)="sortByYearDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by year (desc)</li>
                 <li class="dropdown-item" (click)="sortByTitle()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by title</li>
                 <li class="dropdown-item" (click)="sortByTitleDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Sort by title (desc)</li>
-                <li class="dropdown-item" (click)="sortByDBAdding()" [ngStyle]="{ 'cursor': 'pointer' }">Least Recently Added</li>
-                <li class="dropdown-item" (click)="sortByDBAddingDesc()" [ngStyle]="{ 'cursor': 'pointer' }">Most Recently Added</li>
-            </ul> -->
+                <li class="dropdown-item" (click)="sortByRecentlyAdded()" [ngStyle]="{ 'cursor': 'pointer' }">Least Recently Added</li>
+                <li class="dropdown-item" (click)="sortByLeastRecentlyAdded()" [ngStyle]="{ 'cursor': 'pointer' }">Most Recently Added</li>
+            </ul>
         </div>
     </div>
     
     <div *ngIf="cardView; else listView">
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4  row-cols-lg-5 g-2 g-lg-3">
             <div class="col" *ngFor="let movie of filteredFavMovies">
-                <!-- <app-card 
-                [movieId]="movie.id"
-                [movieTitle]="movie.title" 
-                [movieGenre]="movie.genre"
-                [movieProductionYear]="movie.production_year"
-                [movieProductionCountry]="movie.production_country"
-                [moviePosterPath]="'/assets/img/dune.jpg'"></app-card> -->
-                <app-card [movie]="movie"></app-card>
+                <app-card [movie]="movie" [toEdit]="true"></app-card>
             </div>
         </div>
     </div>
 
     <ng-template #listView>
-        <!-- <div class="container">
+        <div class="container">
             <div class="row row-cols-1 row-cols-lg-2">
-                <div class="col" *ngFor="let movie of filteredMovies">
-                   <app-list-item 
-                    [movieId]="movie.id"
-                    [movieTitle]="movie.title" 
-                    [movieGenre]="movie.genre"
-                    [movieProductionYear]="movie.production_year"
-                    [movieProductionCountry]="movie.production_country"
-                    [moviePosterPath]="'/assets/img/dune.jpg'"></app-list-item>
+                <div class="col" *ngFor="let movie of filteredFavMovies">
+                   <app-list-item [movie]="movie"></app-list-item>
                 </div>
             </div>
-        </div> -->
+        </div>
     </ng-template>
 </div>
-
-
-
