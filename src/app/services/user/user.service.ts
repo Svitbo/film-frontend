@@ -9,7 +9,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class UserService {
-  private apiURL = "http://localhost:9000";
+  private apiURL = "/api/";
 
   private favoriteMoviesSubject = new BehaviorSubject<any>([]);
   favoriteMovies$ : Observable<any> = this.favoriteMoviesSubject.asObservable();
