@@ -10,7 +10,7 @@ import { FormGroup } from '@angular/forms';
   providedIn: 'root'
 })
 export class DataService {
-  private apiURL = "http://localhost:9000/films";
+  private apiURL = "/api/films/";
 
   private moviesSubject = new BehaviorSubject<Movie[]>([]);
   movies$ : Observable<Movie[]> = this.moviesSubject.asObservable();
