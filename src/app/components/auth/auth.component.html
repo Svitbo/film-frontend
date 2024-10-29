@@ -2,7 +2,6 @@
 <button class="btn btn-outline-light me-2" type="button" (click)="openModal(modalSignUp)" *ngIf="!isLoggedIn()">Sign Up</button>
 <button class="btn btn-outline-light me-2" type="button" (click)="logout()" *ngIf="isLoggedIn()">Log out</button>
 
-
 <ng-template #modalSignIn>
     <div>
         <div class="modal-header">
@@ -13,7 +12,7 @@
             <form [formGroup]="signInForm" (ngSubmit)="onSignInSubmit()">
                 <div class="mb-3">
                     <label for="username" class="form-label">User Name</label>
-                    <input type="text" class="form-control" id="username" aria-describedby="name" placeholder="Enter username" formControlName="username">
+                    <input type="text" class="form-control" id="username" autocomplete="off" aria-describedby="name" placeholder="Enter username" formControlName="username">
                 </div>
                 <div class="mb-3">
                     <label for="pass" class="form-label">Password</label>
@@ -25,7 +24,6 @@
     </div>
 </ng-template>
 
-
 <ng-template #modalSignUp>
     <div>
         <div class="modal-header">
@@ -36,7 +34,7 @@
             <form [formGroup]="signUpForm" (ngSubmit)="onSignUpSubmit()">
                 <div class="mb-3">
                     <label for="username" class="form-label">User Name</label>
-                    <input type="text" class="form-control" id="username" aria-describedby="name" placeholder="Enter username" formControlName="username"
+                    <input type="text" autocomplete="off" class="form-control" id="username" aria-describedby="name" placeholder="Enter username" formControlName="username"
                         [ngClass]="{'is-invalid': signUpForm.get('username')?.invalid && signUpForm.get('username')?.touched}">
                 </div>
                 <div class="mb-3">
@@ -54,4 +52,3 @@
         </div>
     </div>
 </ng-template>
-

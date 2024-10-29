@@ -37,14 +37,4 @@ export class FilmComponent {
       }
     );
   }
-
-
-  // noPermission() {
-  //   let role = localStorage.getItem('role');
-
-  //   if(role == null || role == 'Guest') {
-  //     return false;
-  //   } 
-  //   return true;
-  // }
 }

@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { Movie } from 'src/app/entities/Movie';
 import { DataService } from 'src/app/services/data/data.service';
-import { ResetSortingService } from 'src/app/services/reset-sorting/reset-sorting.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -20,7 +18,7 @@ export class FavoritesComponent {
   filteredFavMovies : Movie[] = []
   cardView! : boolean;
 
-  constructor(private dataService : DataService, private resetSortingService : ResetSortingService, private userService : UserService) { }
+  constructor(private dataService : DataService, private userService : UserService) { }
 
   ngOnInit() : void {
     this.dataService.movies$.subscribe(movies => {
@@ -29,12 +27,11 @@ export class FavoritesComponent {
       this.checkAddedToFavorites();
     });
   
-    // Отримуємо улюблені фільми
     this.userService.getFavoriteFilms();
   
     this.userService.favoriteMovies$.subscribe(movies => {
       this.favoriteMovies = movies;
-      this.checkAddedToFavorites(); // Оновлюємо після отримання улюблених фільмів
+      this.checkAddedToFavorites();
     });
   
     this.dataService.titleToSearchBy$.subscribe(title => {
@@ -42,12 +39,6 @@ export class FavoritesComponent {
       this.filterMovies();
       this.checkAddedToFavorites();
     });
-  
-    // Залиште ваші консольні логування для налагодження
-    console.log('All movies', this.movies);
-    console.log('Filtered movies', this.filteredMovies);
-    console.log('Favorite movies', this.favoriteMovies);
-
 
     if(localStorage.getItem('card-view') != null) {
       const value = localStorage.getItem('card-view');
@@ -58,8 +49,6 @@ export class FavoritesComponent {
         this.showList();
       }
     }
-
-    this.chooseSortingOnReload();
   }
 
   checkAddedToFavorites() {
@@ -67,8 +56,6 @@ export class FavoritesComponent {
       ...movie,
       isAddedToFavorites: this.favoriteMovies.some(fav => fav.id === movie.id)
     }));
-    
-    console.log(this.filteredFavMovies);
   }
   
   filterMovies() {
@@ -82,86 +69,41 @@ export class FavoritesComponent {
     }
   }
 
-
-  sortByYear() {
-    //this.movies.sort((a, b) => a.year - b.year);
-    localStorage.setItem('filter', 'by-year');
+  loadFilms(sortBy: string, sortOrder: string): void {
+    this.dataService.getSortedFilms(sortBy, sortOrder).subscribe(
+      (data) => {
+        this.movies = data;
+        this.filterMovies()        
+        this.checkAddedToFavorites();
+      },
+      (error) => {
+        console.error('Error fetching sorted films', error);
+      }
+    );
   }
 
-  sortByYearDesc() {
-    //this.movies.sort((a, b) => b.year - a.year);
-    localStorage.setItem('filter', 'by-year-desc');
+  sortByTitle(): void {
+    this.loadFilms('title', 'asc');
   }
 
-  sortByTitle() {
-    // this.movies.sort((a, b) => {
-    //   const titleA = a.title.toLowerCase();
-    //   const titleB = b.title.toLowerCase();
-    
-    //   if (titleA < titleB) return -1;
-    //   if (titleA > titleB) return 1;
-    //   return 0;
-    // });
-    // localStorage.setItem('filter', 'by-title');
+  sortByTitleDesc(): void {
+    this.loadFilms('title', 'desc');
   }
 
-  sortByTitleDesc() {
-    // this.movies.sort((a, b) => {
-    //   const titleA = a.title.toLowerCase();
-    //   const titleB = b.title.toLowerCase();
-    
-    //   if (titleA > titleB) return -1;
-    //   if (titleA < titleB) return 1;
-
-    //   return 0;
-    // });
-    // localStorage.setItem('filter', 'by-title-desc');
+  sortByYear(): void {
+    this.loadFilms('production_year', 'asc');
   }
 
-  sortByDBAdding() {
-    // this.movies.sort((a, b) => {
-    //   const dateA = new Date(a.dateOfAdding).getTime();
-    //   const dateB = new Date(b.dateOfAdding).getTime();
-  
-    //   return dateA - dateB;
-    // });
-    // localStorage.setItem('filter', 'by-db-adding');
+  sortByYearDesc(): void {
+    this.loadFilms('production_year', 'desc');
   }
 
-  sortByDBAddingDesc() {
-    // this.movies.sort((a, b) => {
-    //   const dateA = new Date(a.dateOfAdding).getTime();
-    //   const dateB = new Date(b.dateOfAdding).getTime();
-  
-    //   return dateB - dateA;
-    // });
-    // localStorage.setItem('filter', 'by-db-adding-desc');
+  sortByRecentlyAdded(): void {
+    this.loadFilms('created_at', 'asc');
   }
 
-  resetSorting() {
-    // this.movies = JSON.parse(localStorage.getItem('movies')!);
-    // localStorage.removeItem('filter');
-  }
-
-  chooseSortingOnReload() {
-    // const filter = localStorage.getItem('filter');
-  
-    // if(filter == 'by-year') {
-    //   this.sortByYear();
-    // } else if(filter == 'by-year-desc') {
-    //   this.sortByYearDesc();
-    // } else if(filter == 'by-title') {
-    //   this.sortByTitle();
-    // } else if(filter == 'by-title-desc') {
-    //   this.sortByTitleDesc();
-    // } else if(filter == 'by-db-adding') {
-    //   this.sortByDBAdding();
-    // } else if(filter == 'by-db-adding-desc') {
-    //   this.sortByDBAddingDesc();
-    // }
-    // else {
-    //   this.resetSorting();
-    // }
+  sortByLeastRecentlyAdded(): void {
+    this.loadFilms('created_at', 'desc');
   }
 
   showCards() {

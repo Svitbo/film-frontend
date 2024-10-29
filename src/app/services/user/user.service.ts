@@ -4,10 +4,6 @@ import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { User } from 'src/app/entities/User';
 import { UserCreate } from 'src/app/entities/UserCreate';
 import { jwtDecode } from 'jwt-decode';
-import { Movie } from 'src/app/entities/Movie';
-import { response } from 'express';
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -15,27 +11,10 @@ import { response } from 'express';
 export class UserService {
   private apiURL = "/api/";
 
-  private currentUser: User | null = null;
-
   private favoriteMoviesSubject = new BehaviorSubject<any>([]);
   favoriteMovies$ : Observable<any> = this.favoriteMoviesSubject.asObservable();
 
-
   constructor(private http: HttpClient) {}
-
-  // register(newUser : UserCreate) : any {
-  //   return this.http.post(`${this.apiURL}/register`, newUser).pipe(
-  //     tap(() => {
-  //       this.getToken(newUser.username, newUser.password).subscribe(
-  //         (response) => {
-  //           console.log('Success:', response);
-            
-  //           this.saveToken(response.access_token);
-  //         }
-  //       )
-  //     })
-  //   );
-  // }
 
   register(newUser: UserCreate): any {
     return this.http.post(`${this.apiURL}/register`, newUser).pipe(
@@ -44,16 +23,11 @@ export class UserService {
           (response) => {
             console.log('Success:', response);
             this.saveToken(response.access_token);
-            this.getFavoriteFilms(); // Додаємо виклик отримання улюблених фільмів
+            this.getFavoriteFilms();
           }
         );
       })
     );
-  }
-
-  setCurrentUser(user: User) {
-    this.currentUser = user;
-    localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
   getToken(username: string, password: string): Observable<any> {
@@ -74,7 +48,6 @@ export class UserService {
     );
   }
  
-
   saveToken(token: string): void {
     localStorage.setItem('access_token', token);
   }
@@ -164,7 +137,4 @@ export class UserService {
         })
       );
   }
-
-
-
 }
