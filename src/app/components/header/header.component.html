@@ -1,17 +1,14 @@
 <header class="sticky-top bg-primary bg-gradient" data-bs-theme="dark">
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <!-- logo -->
-            <a class="navbar-brand" [routerLink]="['/catalog']" (click)="resetFilters()"><img src="assets/img/logo.png" alt="logo"></a>
+            <a class="navbar-brand" [routerLink]="['/home']" (click)="resetFilters()"><img src="assets/img/logo.png" alt="logo"></a>
 
-            <!-- mobile navbar -->
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- navbar -->
             <div class="offcanvas offcanvas-end bg-primary" id="navbarSupportedContent">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
@@ -29,7 +26,7 @@
                         </li>
                     </ul>
 
-                    <form [formGroup]="searchForm" class="d-flex" role="search" (ngSubmit)="onSubmit()">
+                    <form [formGroup]="searchForm" class="d-flex" role="search" (ngSubmit)="onSubmit()" *ngIf="showSearch">
                         <input formControlName="title" class="form-control me-2 text-white bg-transparent border border-white" type="search"
                           placeholder="Search..." aria-label="Search">
                         <button class="btn btn-outline-light d-flex justify-content-center align-items-center" type="submit">
@@ -126,5 +123,3 @@
         </div>
     </nav>
 </header>
-
-

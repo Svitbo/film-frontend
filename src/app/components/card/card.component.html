@@ -1,5 +1,4 @@
 <div class="card h-100">
-    <!-- [ngStyle]="{ 'aspect-ratio': '0.66666' }" -->
     <img [src]="movie.cover_image" class="card-img-top" [ngStyle]="{ 'aspect-ratio': '0.66666' }"  alt="poster">
     <div class="card-body d-flex flex-column">
         <h5 class="card-title">{{ movie.title }}</h5>
@@ -14,7 +13,6 @@
     </div>
 </div>
     
-
 <ng-template #updateModal>
     <div>
         <div class="modal-header">
